@@ -3,8 +3,16 @@ import json
 import numpy as np
 import tensorflow as tf
 from os.path import join
+from zipfile import ZipFile
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications import imagenet_utils
+
+
+def unizp_input_images():
+    with ZipFile(join(input_directory, input_images_filename), 'r') as zipObj:
+        print("unzipping files")
+        zipObj.extractall(path=join(input_directory, input_images_folder), pwd=bytes(
+            requester_secret, encoding='utf8'))
 
 
 def load_classes():
@@ -16,7 +24,7 @@ def load_classes():
 def load_model():
     global prediction_model
     prediction_model = tf.keras.models.load_model(
-        join(input_directory, secret_filename))
+        join(input_directory, dataset_filename))
 
 
 def classify_images():
@@ -55,9 +63,9 @@ def classify_images():
 
     global prediction_results
     prediction_results = {}
-    for idx, filename in enumerate(os.listdir(input_directory)):
+    for idx, filename in enumerate(os.listdir(join(input_directory, input_images_folder))):
         if filename.endswith((".jpg", ".JPG")):
-            image_path = join(input_directory, filename)
+            image_path = join(input_directory, input_images_folder, filename)
             predictions = predict_image(image_path)
             predictions = classify_predictions(predictions)
             prediction_results[idx] = {
@@ -78,8 +86,12 @@ def save_results():
 if __name__ == '__main__':
     input_directory = os.environ["IEXEC_IN"]
     output_directory = os.environ["IEXEC_OUT"]
-    secret_filename = os.environ["IEXEC_DATASET_FILENAME"]
+    dataset_filename = os.environ["IEXEC_DATASET_FILENAME"]
+    requester_secret = os.environ["IEXEC_REQUESTER_SECRET_1"]
     classes_filename = "imagenet_class_index.json"
+    input_images_filename = "input_images.zip"
+    input_images_folder = "input_images"
+    unizp_input_images()
     load_model()
     load_classes()
     classify_images()

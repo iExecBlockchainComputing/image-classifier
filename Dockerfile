@@ -11,8 +11,8 @@ RUN  apt-get update \
 ENV CONDA_AUTO_UPDATE_CONDA="false"
 ENV PATH=/root/miniconda/bin:$PATH
 
-RUN conda install -c conda-forge tensorflow==2.6.0
-RUN conda install -c conda-forge matplotlib==3.5.1
+RUN conda install -c conda-forge tensorflow==2.7.0
+RUN conda install -c conda-forge matplotlib
 
 COPY ./src /app
 

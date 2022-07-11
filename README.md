@@ -102,18 +102,20 @@ the classified files and their scores :
 
     docker run --rm -v ${PWD}/local_run:/iexec_out -e IEXEC_OUT=/iexec_out \
     -v ${PWD}/local_run:/iexec_in -e IEXEC_IN=/iexec_in \
-    -e IEXEC_DATASET_FILENAME=mobilenetv1.h5 tf-image-classifier:latest
+    -e IEXEC_DATASET_FILENAME=mobilenetv1.h5 -e IEXEC_REQUESTER_SECRET_1="Rw[/2GY@" tf-image-classifier:latest
 
   
 ### Running in iExec
 
   
-Considering the image has been sconified, app deployed and dataset encrypted and deployed
+Considering the image has been sconified,secret deployed, app deployed and dataset encrypted and deployed
 
 
-    iexec app run 0x... \
+iexec app run 0xE86481eCF9CB8cb9c2f08D2067f8265a709fDdFB \
     --tag tee --dataset 0xa9ed83C91D8311A2B52A6f5efd5A3196D635f53D \
-    --workerpool 0x5210cD9C57546159Ac60DaC17B3e6cDF48674FBD \
-    --chain viviani --input-files \
-    https://raw.githubusercontent.com/iExecBlockchainComputing/image-classifier/main/local_run/bridge.jpg,https://raw.githubusercontent.com/iExecBlockchainComputing/image-classifier/main/local_run/mountain.jpg,https://raw.githubusercontent.com/iExecBlockchainComputing/image-classifier/main/local_run/imagenet_class_index.json
+    --workerpool v7-debug.main.pools.iexec.eth \
+    --secret 1=zip_pwd \
+    --params {\"iexec_developer_logger\":true} \
+    --chain bellecour --input-files \
+    https://raw.githubusercontent.com/iExecBlockchainComputing/image-classifier/multisecret/local_run/input_images.zip,https://raw.githubusercontent.com/iExecBlockchainComputing/image-classifier/multisecret/local_run/imagenet_class_index.json
 
